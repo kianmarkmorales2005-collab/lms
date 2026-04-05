@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register - TechTitan LMS</title>
+  <link rel="stylesheet" href="registerstyle.css"/>
+  
+</head>
+<body>
+
+  <div class="register-wrapper">
+    <div class="register-card">
+
+      <!-- Logo -->
+      <div class="register-logo">
+       <div class="logo-crest">
+      <img src="kll_circle logo.png" alt="logo-crest" class="kll-nav-img">
+    </div>
+          
+        <div class="logo-text">
+          <div class="lt-main">KLL LMS</div>
+          <div class="lt-sub">Learning Management System</div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <h1 class="register-title">Create an account</h1>
+      <p class="register-subtitle">Fill in your details to get started</p>
+
+      <!-- Error / Success messages -->
+      <div class="error-message" id="errorMsg"></div>
+      <div class="success-message" id="successMsg"></div>
+
+      <!-- Form -->
+      <form action="register.php" method="POST">
+
+        <div class="form-group">
+          <label for="name">Full Name</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            placeholder="Enter your full name"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="Enter your email"
+            required
+          />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="year">Year Level</label>
+            <select id="year" name="year">
+              <option value="1st Year">1st Year</option>
+              <option value="2nd Year">2nd Year</option>
+              <option value="3rd Year">3rd Year</option>
+              <option value="4th Year">4th Year</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="role">Role</label>
+            <select id="role" name="role">
+              <option value="student">Student</option>
+              <option value="teacher">Teacher</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="password-wrapper">
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Create a password"
+              required
+              oninput="checkStrength(this.value)"
+            />
+            <button type="button" class="toggle-password" onclick="togglePassword()">
+              <svg id="eyeIcon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </button>
+          </div>
+          <div class="strength-bar">
+            <span id="s1"></span>
+            <span id="s2"></span>
+            <span id="s3"></span>
+            <span id="s4"></span>
+          </div>
+          <div class="strength-label" id="strengthLabel">Enter a password</div>
+        </div>
+
+     
+
+        <button type="submit" class="btn-register">Create Account →</button>
+
+      </form>
+
+      <div class="login-link">
+        Already have an account? <a href="login.html">Login here</a>
+      </div>
+
+    </div>
+    
+
+  <script>
+    // Toggle password visibility
+    function togglePassword() {
+      const input = document.getElementById('password');
+      const icon  = document.getElementById('eyeIcon');
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.innerHTML = `
+          <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/>
+          <path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/>
+          <line x1="1" y1="1" x2="23" y2="23"/>`;
+      } else {
+        input.type = 'password';
+        icon.innerHTML = `
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+          <circle cx="12" cy="12" r="3"/>`;
+      }
+    }
+
+    // Password strength checker
+    function checkStrength(val) {
+      const bars   = [s1, s2, s3, s4];
+      const label  = document.getElementById('strengthLabel');
+      let score = 0;
+
+      if (val.length >= 6)              score++;
+      if (val.match(/[A-Z]/))           score++;
+      if (val.match(/[0-9]/))           score++;
+      if (val.match(/[^a-zA-Z0-9]/))   score++;
+
+      const colors = ['#ef4444','#f97316','#eab308','#16a34a'];
+      const labels = ['Weak','Fair','Good','Strong'];
+
+      bars.forEach((b, i) => {
+        b.style.background = i < score ? colors[score - 1] : '#e5e7eb';
+      });
+
+      label.textContent = val.length === 0 ? 'Enter a password' : labels[score - 1] || 'Weak';
+      label.style.color = val.length === 0 ? '#9ca3af' : colors[score - 1] || '#ef4444';
+    }
+
+    // Show error/success from URL params
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('error')) {
+      const msg = document.getElementById('errorMsg');
+      msg.textContent = urlParams.get('error');
+      msg.classList.add('show');
+    }
+    if (urlParams.get('success')) {
+      const msg = document.getElementById('successMsg');
+      msg.textContent = urlParams.get('success');
+      msg.classList.add('show');
+    }
+  </script>
+
+</body>
+</html> 

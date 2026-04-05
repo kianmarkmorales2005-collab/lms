@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Learning Management Systems</title>
+  <link rel="stylesheet" href="style(1).css" />
+  <script src ="function.js" defer></script>
+</head>
+<body>
+
+   
+
+
+<header>
+
+    <a href="dashboard.html" class="logo" ></a>
+
+
+</header>
+<aside class="sidebar">
+ <button id="navToggle">☰</button>
+   <div class="logo"><div class="logo-dot"></div>TechTitan</div>
+<nav id="myNav" class="nav-hidden">
+  
+  <nav class="nav">
+  <a href="dashboard.html" class="nav-item">
+    <span class="icon"></span> Dashboard
+  </a>
+    <a href="courses.html" class="nav-item">
+      <span class="icon"></span> Courses
+    </a>
+    <a href="Grades.html" class="nav-item active">
+      <span class="icon"></span> Grades
+    </a>
+     <a href="Profile.html" class="nav-item">
+      <span class="icon"></span> Profile
+    </a>
+  </nav>
+  <div class="nav-bottom">
+   
+    <div class="user-card">
+      <div class="avatar"></div>
+      <div class="user-info">
+        <div class="name">Kian</div>
+        <div class="role">Student</div>
+      </div>
+    </div>
+     <div class="sidebar-logo-bottom">
+        <img src="logo2.png" alt="Logo" class="bottom-logo"/>
+      </div>
+  </div>
+</nav>
+</aside>
+  <main class ="main">
+  <section class="page active" id="grades">
+    <div class="page-header">
+      <h1>My Grades</h1>
+      <p>Track your academic performance across all courses.</p>
+    </div>
+
+    <div class="grades-summary">
+      <div class="gpa-card">
+        <div style="font-size:0.76rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Cumulative GWA</div>
+        <div class="gpa-value">2.00</div>
+        <div style="font-size:0.8rem;color:var(--muted);margin-top:4px">Top 12% of class</div>
+      </div>
+      <div class="card" style="text-align:center">
+        <div style="font-size:0.76rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Courses Completed</div>
+        <div style="font-family:'Syne',sans-serif;font-size:3rem;font-weight:800;color:var(--accent3)">2</div>
+        <div style="font-size:0.8rem;color:var(--muted);margin-top:4px">out of 6 enrolled</div>
+      </div>
+      <div class="card" style="text-align:center">
+        <div style="font-size:0.76rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Assignments Graded</div>
+        <div style="font-family:'Syne',sans-serif;font-size:3rem;font-weight:800;color:var(--accent2)">18</div>
+        <div style="font-size:0.8rem;color:var(--muted);margin-top:4px">3 pending review</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">Grade Breakdown by Course</div>
+      <table class="grades-table">
+        <thead>
+          <tr>
+            <th>Course</th>
+            <th>Assignments</th>
+            <th>Midterm</th>
+            <th>Final</th>
+            <th>Progress</th>
+            <th>Grade</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Data Structures and Algorithms</strong></td>
+            <td>80%</td>
+            <td>88%</td>
+            <td>85%</td>
+            <td><span class="mini-progress"><span class="mini-fill" style="width:68%;background:var(--accent);display:block"></span></span></td>
+            <td><span class="grade-pill" style="background:gray;color:rgb(82, 228, 113)">A+</span></td>
+          </tr>
+          <tr>
+            <td><strong>Web Development</strong></td>
+            <td>85%</td>
+            <td>79%</td>
+            <td>88%</td>
+            <td><span class="mini-progress"><span class="mini-fill" style="width:45%;background:var(--accent3);display:block"></span></span></td>
+            <td><span class="grade-pill" style="background:gray;color:rgb(74, 74, 223)">B+</span></td>
+          </tr>
+          <tr>
+            <td><strong>Information Management</strong></td>
+            <td>87%</td>
+            <td>90%</td>
+            <td>83%</td>
+            <td><span class="mini-progress"><span class="mini-fill" style="width:100%;background:var(--accent2);display:block"></span></span></td>
+            <td><span class="grade-pill" style="background:gray;color:rgb(82, 228, 113)">A+</span></td>
+          </tr>
+          <tr>
+            <td><strong>Fundamentals to Programming</strong></td>
+            <td>80%</td>
+            <td>--</td>
+            <td>--</td>
+            <td><span class="mini-progress"><span class="mini-fill" style="width:5%;background:#f5a623;display:block"></span></span></td>
+            <td><span class="grade-pill" style="background:gray;color:rgb(74, 74, 223)">B+</span></td>
+          </tr>
+          <tr>
+            <td><strong>Object oriented Programming</strong></td>
+            <td>81%</td>
+            <td>89%</td>
+            <td>84%</td>
+            <td><span class="mini-progress"><span class="mini-fill" style="width:100%;background:#60a5fa;display:block"></span></span></td>
+            <td><span class="grade-pill" style="background:gray;color:rgb(82, 228, 113)">A</span></td>
+          </tr>
+          <tr>
+            <td><strong>Intermediate Programming</strong></td>
+            <td>--</td>
+            <td>--</td>
+            <td>--</td>
+            <td><span class="mini-progress"><span class="mini-fill" style="width:0%;display:block"></span></span></td>
+            <td><span class="grade-pill" style="background:gray;color:rgb(82, 228, 113)">--</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+
+</main>
+
+
+
+</body>
