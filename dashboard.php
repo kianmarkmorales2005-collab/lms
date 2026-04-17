@@ -6,13 +6,13 @@ include 'db.php';
 
 
 
-// Redirect if not logged in
+
 if (!isset($_SESSION['user_id'])) {
   header("Location: login.html");
   exit();
 }
 
-// Assign session values to local variables
+
 $user_id   = $_SESSION['user_id'];
 $user_name = $_SESSION['user_name'];
 $user_year = $_SESSION['user_year'];

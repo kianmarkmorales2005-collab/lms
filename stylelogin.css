@@ -191,7 +191,7 @@
 
     /* Bottom branding */
     .logo-crest {
-    width: 60px;               /* Adjust size to fit your navbar height */
+    width: 60px;             
     height: 60px;
     display: flex;
     align-items: center;
@@ -199,16 +199,15 @@
 }
 
 .kll-nav-img {
-    width: 100%;               /* Fills the logo-crest container */
+    width: 100%;              
     height: 100%;
-    object-fit: contain;       /* Keeps the logo from stretching */
-    border-radius: 50%;        /* Makes the image circular */
-    border: 2px solid #c0001e; /* Optional: adds a red ring to match your theme */
+    object-fit: contain;       
+    border-radius: 50%;        
+    border: 2px solid #c0001e; 
 }
 
 .nav-logo {
     display: flex;
     align-items: center;
     text-decoration: none;
-    gap: 15px;                 /* Space between logo and text */
-}
+    gap: 15px;              
