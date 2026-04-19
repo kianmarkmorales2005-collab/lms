@@ -14,16 +14,14 @@ $user_name = $_SESSION['user_name'];
 $user_year = $_SESSION['user_year'];  
 $user_role = $_SESSION['user_role'];  
 
-// Fixed variable name to $coursesResult (plural) to match your HTML loop below
-$coursesResult = mysqli_query($conn, "SELECT * FROM courses WHERE year_level = '$user_year' ORDER BY title ASC");
+// Using LIKE allows for matching "1st Year" with "1st Year - First Sem"
+$coursesResult = mysqli_query($conn, "SELECT * FROM courses WHERE year_level LIKE '$user_year%' ORDER BY title ASC");
 
 $enrolledIDs = [];
-// Fixed typo: mysqli_query and enrollments
 $enrolledResult = mysqli_query($conn, "SELECT course_id FROM enrollments WHERE student_id = $user_id");
 
 if ($enrolledResult) {
     while ($row = mysqli_fetch_assoc($enrolledResult)){
-        // Fixed: Use course_id (with underscore) to match your SELECT statement
         $enrolledIDs[] = $row['course_id'];
     }
 }
@@ -33,77 +31,74 @@ if ($enrolledResult) {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Learning Management System</title>
+  <title>Courses - TechTitan LMS</title>
   <link rel="stylesheet" href="style(1).css" />
-  
 </head>
 <body>
 
-    <title> LMS </title>
-
-
 <header>
-
-    <a href="dashboard.php" class="logo" >LMS</a>
-
-
+    <a href="dashboard.php" class="logo">LMS</a>
 </header>
+
 <aside class="sidebar">
- <button id="navToggle">☰</button>
-<nav id="myNav" class="nav-hidden">
-  <div class="logo"><div class="logo-dot"></div>TechTitan</div>
+  <button id="navToggle">☰</button>
+
+  <div class="logo">
+    <img src="kll_circle logo.png" alt="KLL Logo" class="nav-logo-img"/>
+    KLL
+  </div>
+
   <nav class="nav">
-  <a href="dashboard.php" class="nav-item">
-    <span class="icon"></span> Dashboard
-  </a>
-    <a href="courses.php" class="nav-item active">
+    <a href="dashboard.php" class="nav-item <?php echo basename($_SERVER['PHP_SELF'])=='dashboard.php'?'active':''; ?>">
+      <span class="icon"></span> Dashboard
+    </a>
+    <a href="courses.php" class="nav-item <?php echo basename($_SERVER['PHP_SELF'])=='courses.php'?'active':''; ?>">
       <span class="icon"></span> Courses
     </a>
-    <a href="Grades.html" class="nav-item">
+    <a href="grades.php" class="nav-item <?php echo basename($_SERVER['PHP_SELF'])=='grades.php'?'active':''; ?>">
       <span class="icon"></span> Grades
     </a>
-    <a href="Profile.html" class="nav-item">
+    <a href="profile.php" class="nav-item <?php echo basename($_SERVER['PHP_SELF'])=='profile.php'?'active':''; ?>">
       <span class="icon"></span> Profile
     </a>
   </nav>
+
   <div class="nav-bottom">
-   
     <div class="user-card">
       <div class="avatar"></div>
       <div class="user-info">
-        <div class="name"><?php echo htmlspecialchars($user_name);?></div>
-        <div class="role"><?php echo htmlspecialchars($user_role);?></div> 
+        <div class="name"><?php echo htmlspecialchars($user_name); ?></div>
+        <div class="role"><?php echo htmlspecialchars($user_role); ?></div>
       </div>
     </div>
-     <div class="sidebar-logo-bottom">
-        <img src="logo2.png" alt="Logo" class="bottom-logo"/>
-      </div>
+    <div class="sidebar-logo-bottom">
+      <img src="kll_circle logo.png" alt="Logo" class="bottom-logo"/>
+</div>
+    </div>
   </div>
-</nav>
 </aside>
-  <main class ="main">
-<section class="page active" id="courses">
+
+
+<main class="main">
+  <section class="page active" id="courses">
     <div class="page-header">
       <h1>My Courses</h1>
-      <p>Showing Courses for for <strong><?php echo htmlspecialchars($user_year);?></strong> students</p>
+      <p>Showing Courses for <strong><?php echo htmlspecialchars($user_year);?></strong></p>
     </div>
 
     <div class="courses-filter">
       <button class="filter-btn active" onclick="filterCourses('all', this)">All Courses</button>
-      <button class="filter-btn" onclick="filterCourses('progress', this)">In Progress</button>
-      <button class="filter-btn" onclick="filterCourses('completed', this)">Completed</button>
+      <button class="filter-btn" onclick="filterCourses('enrolled', this)">In Progress</button>
       <button class="filter-btn" onclick="filterCourses('available', this)">Available</button>
     </div>
 
-  <div class="courses-grid">
-    <?php
-     $colors = [
+    <div class="courses-grid">
+      <?php
+      $colors = [
         'linear-gradient(135deg,#691414,#c93737)',
         'linear-gradient(135deg,#630f0f,#c93737)',
         'linear-gradient(135deg,#2b0d0d,#c93737)',
-        'linear-gradient(135deg,#1a1200,#c93737)',
-        'linear-gradient(135deg,#500f0f,#c93737)',
-        'linear-gradient(135deg,#551414,#c93737)',
+        'linear-gradient(135deg,#1a1200,#c93737)'
       ];
       $i = 0;
 
@@ -115,12 +110,10 @@ if ($enrolledResult) {
           $i++;
       ?>
         <div class="course-card" data-status="<?php echo $status; ?>">
-          <div class="course-thumb" 
-               style="background:<?php echo $color; ?>">
-          </div>
+          <div class="course-thumb" style="background:<?php echo $color; ?>"></div>
           <div class="course-body">
-            <div class="course-tag" style="color:var(--accent3)">
-              <?php echo htmlspecialchars($user_year); ?>
+            <div class="course-tag" style="color:#c93737; font-weight:bold; font-size: 0.8rem;">
+              <?php echo htmlspecialchars($course['year_level']); ?>
             </div>
             <div class="course-title">
               <?php echo htmlspecialchars($course['title']); ?>
@@ -128,29 +121,25 @@ if ($enrolledResult) {
             <div class="course-instructor">
               <?php echo htmlspecialchars($course['schedule']); ?>
             </div>
+            
             <div class="progress-bar-wrap">
-              <div class="progress-bar-fill" 
-                   style="width:<?php echo $isEnrolled ? '10' : '0'; ?>%;
-                          background:#c93737">
-              </div>
+              <div class="progress-bar-fill" style="width:<?php echo $isEnrolled ? '25' : '0'; ?>%; background:#c93737"></div>
             </div>
+
             <div class="course-meta">
-              <span>
-                <?php echo $isEnrolled ? 'Enrolled ✓' : 'Not enrolled'; ?>
-              </span>
+              <span><?php echo $isEnrolled ? 'Enrolled ✓' : 'Not enrolled'; ?></span>
             </div>
 
             <?php if ($isEnrolled): ?>
-              <button class="btn btn-primary" 
-                      style="background:#37c94f;color:#000">
-                Continue
-              </button>
+              <a href="course_details.php?id=<?php echo $course['id']; ?>" 
+                 class="btn btn-primary" 
+                 style="background:#37c94f; color:#000; text-decoration:none; display:block; text-align:center; padding:10px; border-radius:5px; font-weight:bold;">
+                 Continue
+              </a>
             <?php else: ?>
               <form method="POST" action="enroll.php">
-                <input type="hidden" name="course_id" 
-                       value="<?php echo $course['id']; ?>"/>
-                <button type="submit" class="btn btn-primary" 
-                        style="background:#c93737;color:#fff">
+                <input type="hidden" name="course_id" value="<?php echo $course['id']; ?>"/>
+                <button type="submit" class="btn btn-primary" style="background:#c93737; color:#fff; width:100%;">
                   Enroll
                 </button>
               </form>
@@ -162,15 +151,16 @@ if ($enrolledResult) {
         endwhile;
       else:
       ?>
-        <div style="color:var(--muted);font-size:0.9rem;padding:20px;">
-          No courses found for <?php echo htmlspecialchars($user_year); ?>.
+        <div style="grid-column: 1/-1; text-align:center; padding:50px; color:gray;">
+          No courses found for your current year/semester.
         </div>
       <?php endif; ?>
     </div>
-      </section>
+  </section>
 </main>
 
 <script>
+// Sidebar Toggle
 const navToggle = document.getElementById("navToggle");
 if (navToggle) {
   navToggle.addEventListener("click", () => {
@@ -178,21 +168,20 @@ if (navToggle) {
   });
 }
 
+// Filtering Logic
 function filterCourses(status, btn) {
-  document.querySelectorAll('.filter-btn')
-    .forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
 
   document.querySelectorAll('.course-card').forEach(card => {
     if (status === 'all' || card.dataset.status === status) {
-      card.style.display = '';
+      card.style.display = 'block';
     } else {
       card.style.display = 'none';
     }
   });
 }
 </script>
-
 
 </body>
 </html>

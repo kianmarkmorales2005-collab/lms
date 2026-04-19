@@ -129,16 +129,16 @@ $assignCount  = $assignResult ? mysqli_num_rows($assignResult) : 0;
             <div class="activity-text">
               Ongoing Activity <strong>Module </strong> - none
             </div>
-            <div class="activity-time">none</div>
+            <div class="activity-time"></div>
           </div>
         </div>
         <div class="activity-item">
           <div class="activity-dot" style="background:var(--accent)"></div>
           <div>
             <div class="activity-text">
-              Submitted <strong>Assignment </strong> — none
+              Submitted <strong>Assignment </strong> - none
             </div>
-            <div class="activity-time">none</div>
+            <div class="activity-time"></div>
           </div>
         </div>
       </div>

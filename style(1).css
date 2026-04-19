@@ -298,8 +298,12 @@ body::before {
   }
 
   .course-body { padding: 16px; }
-  .course-tag { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
-  .course-title { font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700; margin-bottom: 6px; }
+.course-tag {
+    font-size: 0.7rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}  .course-title { font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700; margin-bottom: 6px; }
   .course-instructor { font-size: 0.78rem; color: var(--muted); margin-bottom: 12px; }
 
   .progress-bar-wrap { background: var(--surface2); border-radius: 4px; height: 5px; margin-bottom: 8px; }
