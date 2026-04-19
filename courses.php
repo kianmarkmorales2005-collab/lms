@@ -9,13 +9,31 @@ if (!isset($_SESSION['user_id'])){
     exit();
 }
 
+// ... existing session and db include code ...
+
 $user_id = $_SESSION['user_id'];
 $user_name = $_SESSION['user_name'];  
-$user_year = $_SESSION['user_year'];  
+$user_year = $_SESSION['user_year']; // e.g., "2nd Year - Second Sem"
 $user_role = $_SESSION['user_role'];  
 
-// Using LIKE allows for matching "1st Year" with "1st Year - First Sem"
-$coursesResult = mysqli_query($conn, "SELECT * FROM courses WHERE year_level LIKE '$user_year%' ORDER BY title ASC");
+// 1. Break "2nd Year - Second Sem" into ["2nd Year", "Second Sem"]
+$parts = explode('-', $user_year);
+$yearPart = trim($parts[0]); // "2nd Year"
+
+// 2. Extract just the first 3 letters of the semester (e.g., "Sec") 
+// This allows the query to match "Second Se" in your database.
+$semPart = isset($parts[1]) ? trim(substr(trim($parts[1]), 0, 3)) : ''; 
+
+// 3. Search for the Year and the Semester prefix separately
+$query = "SELECT * FROM courses 
+          WHERE year_level LIKE '%$yearPart%' 
+          AND year_level LIKE '%$semPart%' 
+          ORDER BY title ASC";
+
+$coursesResult = mysqli_query($conn, $query);
+
+
+
 
 $enrolledIDs = [];
 $enrolledResult = mysqli_query($conn, "SELECT course_id FROM enrollments WHERE student_id = $user_id");
@@ -42,42 +60,39 @@ if ($enrolledResult) {
 
 <aside class="sidebar">
   <button id="navToggle">☰</button>
-
-  <div class="logo">
-    <img src="kll_circle logo.png" alt="KLL Logo" class="nav-logo-img"/>
-    KLL
-  </div>
-
-  <nav class="nav">
-    <a href="dashboard.php" class="nav-item <?php echo basename($_SERVER['PHP_SELF'])=='dashboard.php'?'active':''; ?>">
-      <span class="icon"></span> Dashboard
-    </a>
-    <a href="courses.php" class="nav-item <?php echo basename($_SERVER['PHP_SELF'])=='courses.php'?'active':''; ?>">
-      <span class="icon"></span> Courses
-    </a>
-    <a href="grades.php" class="nav-item <?php echo basename($_SERVER['PHP_SELF'])=='grades.php'?'active':''; ?>">
-      <span class="icon"></span> Grades
-    </a>
-    <a href="profile.php" class="nav-item <?php echo basename($_SERVER['PHP_SELF'])=='profile.php'?'active':''; ?>">
-      <span class="icon"></span> Profile
-    </a>
-  </nav>
-
-  <div class="nav-bottom">
-    <div class="user-card">
-      <div class="avatar"></div>
-      <div class="user-info">
-        <div class="name"><?php echo htmlspecialchars($user_name); ?></div>
-        <div class="role"><?php echo htmlspecialchars($user_role); ?></div>
+  <nav id="myNav" class="nav-hidden">
+   <div class="logo">
+  <img src="kll_circle logo.png" alt="KLL Logo" class="nav-logo-img"/>
+  KLL
+</div>
+    <nav class="nav">
+      <a href="dashboard.php" class="nav-item active">
+        <span class="icon"></span> Dashboard
+      </a>
+      <a href="courses.php" class="nav-item">
+        <span class="icon"></span> Courses
+      </a>
+      <a href="grades.php" class="nav-item">
+        <span class="icon"></span> Grades
+      </a>
+      <a href="profile.php" class="nav-item">
+        <span class="icon"></span> Profile
+      </a>
+    </nav>
+    <div class="nav-bottom">
+      <div class="user-card">
+        <div class="avatar"></div>
+        <div class="user-info">
+          <div class="name"><?php echo htmlspecialchars($user_name); ?></div>
+          <div class="role"><?php echo htmlspecialchars($user_role); ?></div>
+        </div>
       </div>
-    </div>
-    <div class="sidebar-logo-bottom">
-      <img src="kll_circle logo.png" alt="Logo" class="bottom-logo"/>
+     <div class="sidebar-logo-bottom">
+  <img src="kll_circle logo.png" alt="Logo" class="bottom-logo"/>
 </div>
     </div>
-  </div>
+  </nav>
 </aside>
-
 
 <main class="main">
   <section class="page active" id="courses">
@@ -119,7 +134,7 @@ if ($enrolledResult) {
               <?php echo htmlspecialchars($course['title']); ?>
             </div>
             <div class="course-instructor">
-              <?php echo htmlspecialchars($course['schedule']); ?>
+             
             </div>
             
             <div class="progress-bar-wrap">

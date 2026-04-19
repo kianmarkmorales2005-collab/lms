@@ -1,3 +1,29 @@
+<?php
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+include 'db.php';
+
+
+
+
+if (!isset($_SESSION['user_id'])) {
+  header("Location: login.html");
+  exit();
+}
+
+
+$user_id   = $_SESSION['user_id'];
+$user_name = $_SESSION['user_name'];
+$user_year = $_SESSION['user_year'];
+$user_gwa  = $_SESSION['user_gwa'];
+$user_role = $_SESSION['user_role'];
+
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,7 +31,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Learning Management Systems</title>
   <link rel="stylesheet" href="style(1).css" />
-  <script src ="function.js" defer></script>
+
 </head>
 <body>
 
@@ -14,43 +40,44 @@
 
 <header>
 
-    <a href="dashboard.html" class="logo" ></a>
+    <a href="dashboard.php" class="logo" ></a>
 
 
 </header>
 <aside class="sidebar">
- <button id="navToggle">☰</button>
-   <div class="logo"><div class="logo-dot"></div>TechTitan</div>
-<nav id="myNav" class="nav-hidden">
-  
-  <nav class="nav">
-  <a href="dashboard.php" class="nav-item">
-    <span class="icon"></span> Dashboard
-  </a>
-    <a href="courses.php" class="nav-item">
-      <span class="icon"></span> Courses
-    </a>
-    <a href="Grades.html" class="nav-item active">
-      <span class="icon"></span> Grades
-    </a>
-     <a href="Profile.html" class="nav-item">
-      <span class="icon"></span> Profile
-    </a>
-  </nav>
-  <div class="nav-bottom">
-   
-    <div class="user-card">
-      <div class="avatar"></div>
-      <div class="user-info">
-        <div class="name">Kian</div>
-        <div class="role">Student</div>
+  <button id="navToggle">☰</button>
+  <nav id="myNav" class="nav-hidden">
+   <div class="logo">
+  <img src="kll_circle logo.png" alt="KLL Logo" class="nav-logo-img"/>
+  KLL
+</div>
+    <nav class="nav">
+      <a href="dashboard.php" class="nav-item">
+        <span class="icon"></span> Dashboard
+      </a>
+      <a href="courses.php" class="nav-item">
+        <span class="icon"></span> Courses
+      </a>
+      <a href="grades.php" class="nav-item active">
+        <span class="icon"></span> Grades
+      </a>
+      <a href="profile.php" class="nav-item">
+        <span class="icon"></span> Profile
+      </a>
+    </nav>
+    <div class="nav-bottom">
+      <div class="user-card">
+        <div class="avatar"></div>
+        <div class="user-info">
+          <div class="name"><?php echo htmlspecialchars($user_name); ?></div>
+          <div class="role"><?php echo htmlspecialchars($user_role); ?></div>
+        </div>
       </div>
-    </div>
      <div class="sidebar-logo-bottom">
-        <img src="logo2.png" alt="Logo" class="bottom-logo"/>
-      </div>
-  </div>
-</nav>
+  <img src="kll_circle logo.png" alt="Logo" class="bottom-logo"/>
+</div>
+    </div>
+  </nav>
 </aside>
   <main class ="main">
   <section class="page active" id="grades">
@@ -147,6 +174,23 @@
 
 </main>
 
+<script>
+const navToggle = document.getElementById("navToggle");
+if (navToggle) {
+  navToggle.addEventListener("click", () => {
+    document.body.classList.toggle("sidebar-closed");
+  });
+}
 
+// Active nav item
+const navItems = document.querySelectorAll('.nav-item');
+navItems.forEach(item => {
+  item.addEventListener('click', function () {
+    navItems.forEach(i => i.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+</script>
 
 </body>
+</html>
