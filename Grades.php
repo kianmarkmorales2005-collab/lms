@@ -16,11 +16,35 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id   = $_SESSION['user_id'];
 $user_name = $_SESSION['user_name'];
-$user_year = $_SESSION['user_year'];
-$user_gwa  = $_SESSION['user_gwa'];
 $user_role = $_SESSION['user_role'];
 
+// 1. Fetch Student's specific GWA and Year from the users table
+$userQuery = mysqli_query($conn, "SELECT gwa, year FROM users WHERE id = $user_id");
+$userData = mysqli_fetch_assoc($userQuery);
+$current_gwa = $userData['gwa'] ?? '0.00';
 
+// 2. Fetch Grades by joining 'grades' and 'courses' tables
+$gradesQuery = "SELECT c.title, g.grade 
+                FROM grades g 
+                JOIN courses c ON g.course_id = c.id 
+                WHERE g.student_id = $user_id";
+$gradesResult = mysqli_query($conn, $gradesQuery);
+
+
+
+$enrollmentQuery = "SELECT COUNT(*) AS total FROM enrollments WHERE student_id = $user_id";
+$enrollmentResult = mysqli_query($conn, $enrollmentQuery);
+
+$totalEnrolled = mysqli_num_rows($enrollmentResult); 
+$courseRows = [];
+$completedCount = 0;
+
+if ($gradesResult) {
+    while ($row = mysqli_fetch_assoc($gradesResult)) {
+        $courseRows[] = $row;
+        if ($row['grade'] > 0) $completedCount++;
+    }
+}
 
 ?>
 
@@ -89,20 +113,24 @@ $user_role = $_SESSION['user_role'];
     <div class="grades-summary">
       <div class="gpa-card">
         <div style="font-size:0.76rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Cumulative GWA</div>
-        <div class="gpa-value">2.00</div>
-        <div style="font-size:0.8rem;color:var(--muted);margin-top:4px">Top 12% of class</div>
+        <div class=gpa-value><?php echo number_format($current_gwa, 2); ?></div>
+        <div style="font-size:0.8rem;color:var(--muted);margin-top:4px">Current Standing</div>
       </div>
-      <div class="card" style="text-align:center">
+      
+     <div class="card" style="text-align:center">
         <div style="font-size:0.76rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Courses Completed</div>
-        <div style="font-family:'Syne',sans-serif;font-size:3rem;font-weight:800;color:var(--accent3)">2</div>
-        <div style="font-size:0.8rem;color:var(--muted);margin-top:4px">out of 6 enrolled</div>
-      </div>
-      <div class="card" style="text-align:center">
-        <div style="font-size:0.76rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Assignments Graded</div>
-        <div style="font-family:'Syne',sans-serif;font-size:3rem;font-weight:800;color:var(--accent2)">18</div>
-        <div style="font-size:0.8rem;color:var(--muted);margin-top:4px">3 pending review</div>
-      </div>
+        <div style="font-family:'Syne',sans-serif;font-size:3rem;font-weight:800;color:var(--accent3)">
+            <?php echo $completedCount ?? 0; ?>
+        </div>
+        <div style="font-size:0.8rem;color:var(--muted);margin-top:4px">out of <?php echo $totalEnrolled ?? 0; ?> enrolled</div>
     </div>
+     <div class="card" style="text-align:center">
+        <div style="font-size:0.76rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Current Year</div>
+        <div style="font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;color:var(--accent2); margin-top:15px;">
+            <?php echo htmlspecialchars($userData['year']); ?>
+        </div>
+    </div>
+</div>
 
     <div class="card">
       <div class="section-title">Grade Breakdown by Course</div>
@@ -118,55 +146,26 @@ $user_role = $_SESSION['user_role'];
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td><strong>Data Structures and Algorithms</strong></td>
-            <td>80%</td>
-            <td>88%</td>
-            <td>85%</td>
-            <td><span class="mini-progress"><span class="mini-fill" style="width:68%;background:var(--accent);display:block"></span></span></td>
-            <td><span class="grade-pill" style="background:gray;color:rgb(82, 228, 113)">A+</span></td>
-          </tr>
-          <tr>
-            <td><strong>Web Development</strong></td>
-            <td>85%</td>
-            <td>79%</td>
-            <td>88%</td>
-            <td><span class="mini-progress"><span class="mini-fill" style="width:45%;background:var(--accent3);display:block"></span></span></td>
-            <td><span class="grade-pill" style="background:gray;color:rgb(74, 74, 223)">B+</span></td>
-          </tr>
-          <tr>
-            <td><strong>Information Management</strong></td>
-            <td>87%</td>
-            <td>90%</td>
-            <td>83%</td>
-            <td><span class="mini-progress"><span class="mini-fill" style="width:100%;background:var(--accent2);display:block"></span></span></td>
-            <td><span class="grade-pill" style="background:gray;color:rgb(82, 228, 113)">A+</span></td>
-          </tr>
-          <tr>
-            <td><strong>Fundamentals to Programming</strong></td>
-            <td>80%</td>
-            <td>--</td>
-            <td>--</td>
-            <td><span class="mini-progress"><span class="mini-fill" style="width:5%;background:#f5a623;display:block"></span></span></td>
-            <td><span class="grade-pill" style="background:gray;color:rgb(74, 74, 223)">B+</span></td>
-          </tr>
-          <tr>
-            <td><strong>Object oriented Programming</strong></td>
-            <td>81%</td>
-            <td>89%</td>
-            <td>84%</td>
-            <td><span class="mini-progress"><span class="mini-fill" style="width:100%;background:#60a5fa;display:block"></span></span></td>
-            <td><span class="grade-pill" style="background:gray;color:rgb(82, 228, 113)">A</span></td>
-          </tr>
-          <tr>
-            <td><strong>Intermediate Programming</strong></td>
-            <td>--</td>
-            <td>--</td>
-            <td>--</td>
-            <td><span class="mini-progress"><span class="mini-fill" style="width:0%;display:block"></span></span></td>
-            <td><span class="grade-pill" style="background:gray;color:rgb(82, 228, 113)">--</span></td>
-          </tr>
-        </tbody>
+    <?php if (!empty($courseRows)): ?>
+        <?php foreach ($courseRows as $row): ?>
+            <tr>
+                <td><strong><?php echo htmlspecialchars($row['title']); ?></strong></td>
+                <td>--</td> <td>--</td> <td>--</td> <td>
+                    <span class="mini-progress">
+                        <span class="mini-fill" style="width:<?php echo ($row['grade'] > 0) ? '100%' : '5%'; ?>; background:var(--accent); display:block;"></span>
+                    </span>
+                </td>
+                <td>
+                    <span class="grade-pill" style="background:rgba(0,0,0,0.05); color:<?php echo ($row['grade'] <= 3.0 && $row['grade'] > 0) ? '#2ecc71' : '#e74c3c'; ?>;">
+                        <?php echo ($row['grade'] > 0) ? number_format($row['grade'], 2) : 'TBA'; ?>
+                    </span>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <tr><td colspan="6" style="text-align:center;">No grade records found.</td></tr>
+    <?php endif; ?>
+</tbody>
       </table>
     </div>
   </section>

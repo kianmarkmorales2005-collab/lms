@@ -37,9 +37,9 @@ $fullName = trim($user['name']);
 $lastSpacePos = strrpos($fullName, ' ');
 
 if ($lastSpacePos !== false) {
-    // Everything before the last space is the First Name (e.g., "Kian Mark")
+    // Everything before the last space is the First Name
     $firstName = substr($fullName, 0, $lastSpacePos);
-    // Everything after the last space is the Last Name (e.g., "Morales")
+    // Everything after the last space is the Last Name 
     $lastName = substr($fullName, $lastSpacePos + 1);
 } else {
     // If there is no space, treat the whole thing as the first name
